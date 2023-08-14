@@ -70,4 +70,55 @@ func TestSubtractOfMatrices(t *testing.T) {
 
 // TestDotOfMatrices testing speed and result of work
 // dotOfMatrices (gonum: Product) function
-func TestDotOfMatrices(t *testing.T
+func TestDotOfMatrices(t *testing.T) {
+	A := createRandomMatrix(16, 16)
+	B := createRandomMatrix(16, 16)
+	check := dotOfVectors(A.RowView(0), B.ColView(0))
+	C := dotOfMatrices(A, B)
+	if !almostEqual(check, C.At(0, 0), 1e-8) {
+		t.Fatal("Перемножение матрицы реализовано неправильно.")
+	}
+}
+
+// TestDeterminantOfMatrix testing speed and result of work
+// determinantOfMatrix (gonum: Det) function
+func TestDeterminantOfMatrix(t *testing.T) {
+	A := mat.NewDense(2, 2, []float64{1, 1, 1, 1})
+	d := determinantOfMatrix(A)
+	if d != 0.0 {
+		t.Fatal("Нахождение определителя матрицы реализовано неправильно.")
+	}
+}
+
+// TestEigensOfMatrix testing speed and result of work
+// eigensOfMatrix (gonum: eig.Factorize) function
+func TestEigensOfMatrix(t *testing.T) {
+	A := mat.NewDense(2, 2, []float64{
+		1, -1,
+		1, 1,
+	})
+	ev, _ := eigensOfMatrix(A)
+	check := []complex128{1+1i, 1-1i}
+	if ev[0] != check[0] || ev[1] != check[1] {
+		t.Fatal("Собственные числа матрицы найдены неправильно.")
+	}
+}
+
+// TestSVDOfMatrix testing speed and result of work
+// SVDOfMatrix (gonum: SVD.Factorize) function
+func TestSVDOfMatrix(t *testing.T) {
+	A := createRandomMatrix(16, 16)
+	S, U, V := SVDOfMatrix(A)
+	sigma := mat.NewDense(16, 16, nil)
+	for i := 0; i < 16; i++ {
+		sigma.Set(i, i, S[i])
+	}
+	var ansFull mat.Dense
+	ansFull.Product(U, sigma, V.T())
+	if !mat.EqualApprox(&ansFull, A, 1e-8) {
+		t.Errorf("SVD реализованно неправильно.")
+	}
+}
+
+// TestCholeskyOfMatrix testing speed and result of work
+// choleskyOfMatrix (gonum: cholesky.Factori
