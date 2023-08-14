@@ -64,4 +64,39 @@ func determinantOfMatrix(A *mat.Dense) (d float64) {
 func eigensOfMatrix(A *mat.Dense) (eigenValues []complex128, eigenVectors *mat.CDense){
 	var eig mat.Eigen
 	if ok := eig.Factorize(A, mat.EigenRight); !ok {
-		log.Fatal("Ei
+		log.Fatal("Eigendecomposition failed")
+	}
+	eigenValues = eig.Values(nil)
+	eigenVectors = eig.VectorsTo(nil)
+	return
+}
+
+// SVDOfMatrix make SVD decomposition of given matrix
+func SVDOfMatrix(A *mat.Dense) (S []float64, U, V *mat.Dense) {
+	var SVD mat.SVD
+	if ok := SVD.Factorize(A, mat.SVDFull); !ok {
+		log.Fatal("SVD failed")
+	}
+	S, U, V = extractSVD(&SVD)
+	return
+}
+
+// choleskyOfMatrix returns L of A = L'L Cholesky decomposition
+func choleskyOfMatrix(A *mat.SymDense) (L *mat.TriDense) {
+	var cholesky mat.Cholesky
+	if ok := cholesky.Factorize(A); !ok {
+		log.Fatal("A matrix is not positive semi-definite.")
+	}
+	L = cholesky.LTo(nil)
+	return
+}
+
+// matPrint print Matrix to Stdout
+func matPrint(A mat.Matrix) {
+	fmt.Printf("%v\n", mat.Formatted(A, mat.Prefix(" "), mat.Excerpt(3)))
+}
+
+// extractSVD extracts SVD decomposition results
+func extractSVD(svd *mat.SVD) (s []float64, u, v *mat.Dense) {
+	return svd.Values(nil), svd.UTo(nil), svd.VTo(nil)
+}
