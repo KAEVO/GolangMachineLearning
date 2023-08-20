@@ -305,4 +305,69 @@ func BenchmarkEigensOfMatrix(b *testing.B) {
 	}
 }
 
-fu
+func benchEigensOfMatrixFunc(N, M int) func(b *testing.B) {
+	return func(b *testing.B) {
+		A := createRandomMatrix(N, M)
+		b.ReportAllocs()
+		b.N = 10
+		b.ResetTimer()
+		for i := 0; i < b.N; i++ {
+			b.StartTimer()
+			ev, evec := eigensOfMatrix(A)
+			b.StopTimer()
+			_, _ = ev, evec
+		}
+	}
+}
+
+// BenchmarkSVDOfMatrix testing speed and memory use of
+// SVDOfMatrix function
+func BenchmarkSVDOfMatrix(b *testing.B) {
+	for key, value := range mapMatTest {
+		b.Run(key, benchSVDOfMatrixFunc(value[0], value[1]))
+	}
+}
+
+func benchSVDOfMatrixFunc(N, M int) func(b *testing.B) {
+	return func(b *testing.B) {
+		A := createRandomMatrix(N, M)
+		b.ReportAllocs()
+		b.N = 10
+		b.ResetTimer()
+		for i := 0; i < b.N; i++ {
+			b.StartTimer()
+			S, U, V := SVDOfMatrix(A)
+			b.StopTimer()
+			_, _, _ = S, U, V
+		}
+	}
+}
+
+// BenchmarkCholeskyOfMatrix testing speed and memory use of
+// choleskyOfMatrix function
+func BenchmarkCholeskyOfMatrix(b *testing.B) {
+	for key, value := range mapMatTest {
+		b.Run(key, benchCholeskyOfMatrixFunc(value[0], value[1]))
+	}
+}
+
+func benchCholeskyOfMatrixFunc(N, M int) func(b *testing.B) {
+	return func(b *testing.B) {
+		A := createRandomMatrix(N, M)
+		var AS mat.SymDense
+		AS.SymOuterK(1, A)
+		b.ReportAllocs()
+		b.N = 10
+		b.ResetTimer()
+		for i := 0; i < b.N; i++ {
+			b.StartTimer()
+			L := choleskyOfMatrix(&AS)
+			b.StopTimer()
+			_ = L
+		}
+	}
+}
+
+func almostEqual(a, b, eps float64) bool {
+	return math.Abs(a - b) <= eps
+}
