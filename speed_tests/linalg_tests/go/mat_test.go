@@ -239,4 +239,70 @@ func benchSubtractOfMatrixFunc(N, M int) func(b *testing.B) {
 		A := createRandomMatrix(N, M)
 		B := createRandomMatrix(N, M)
 		b.ReportAllocs()
-		b.N = 
+		b.N = 10
+		b.ResetTimer()
+		for i := 0; i < b.N; i++ {
+			b.StartTimer()
+			C := subtractOfMatrices(A, B)
+			b.StopTimer()
+			_ = C
+		}
+	}
+}
+
+// BenchmarkDotOfMatrix testing speed and memory use of
+// dotOfMatrices function
+func BenchmarkDotOfMatrix(b *testing.B) {
+	for key, value := range mapMatTest {
+		b.Run(key, benchDotOfMatrixFunc(value[0], value[1]))
+	}
+}
+
+func benchDotOfMatrixFunc(N, M int) func(b *testing.B) {
+	return func(b *testing.B) {
+		A := createRandomMatrix(N, M)
+		B := createRandomMatrix(N, M)
+		b.ReportAllocs()
+		b.N = 10
+		b.ResetTimer()
+		for i := 0; i < b.N; i++ {
+			b.StartTimer()
+			C := dotOfMatrices(A, B)
+			b.StopTimer()
+			_ = C
+		}
+	}
+}
+
+// BenchmarkDeterminantOfMatrix testing speed and memory use of
+// determinantOfMatrix function
+func BenchmarkDeterminantOfMatrix(b *testing.B) {
+	for key, value := range mapMatTest {
+		b.Run(key, benchDeterminantOfMatrixFunc(value[0], value[1]))
+	}
+}
+
+func benchDeterminantOfMatrixFunc(N, M int) func(b *testing.B) {
+	return func(b *testing.B) {
+		A := createRandomMatrix(N, M)
+		b.ReportAllocs()
+		b.N = 10
+		b.ResetTimer()
+		for i := 0; i < b.N; i++ {
+			b.StartTimer()
+			C := determinantOfMatrix(A)
+			b.StopTimer()
+			_ = C
+		}
+	}
+}
+
+// BenchmarkEigensOfMatrix testing speed and memory use of
+// eigensOfMatrix function
+func BenchmarkEigensOfMatrix(b *testing.B) {
+	for key, value := range mapMatTest {
+		b.Run(key, benchEigensOfMatrixFunc(value[0], value[1]))
+	}
+}
+
+fu
