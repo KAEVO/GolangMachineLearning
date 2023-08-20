@@ -181,4 +181,62 @@ func benchScaleMatrixFunc(N, M int, alpha float64) func(b *testing.B) {
 
 // BenchmarkTransposeMatrix testing speed and memory use of
 // transposeMatrix function
-func BenchmarkTran
+func BenchmarkTransposeMatrix(b *testing.B) {
+	for key, value := range mapMatTest {
+		b.Run(key, benchTransposeMatrixFunc(value[0], value[1]))
+	}
+}
+
+func benchTransposeMatrixFunc(N, M int) func(b *testing.B) {
+	return func(b *testing.B) {
+		A := createRandomMatrix(N, M)
+		b.ReportAllocs()
+		b.N = 10
+		b.ResetTimer()
+		for i := 0; i < b.N; i++ {
+			b.StartTimer()
+			B := transposeMatrix(A)
+			b.StopTimer()
+			_ = B
+		}
+	}
+}
+
+// BenchmarkAdditionOfMatrix testing speed and memory use of
+// additionOfMatrices function
+func BenchmarkAdditionOfMatrix(b *testing.B) {
+	for key, value := range mapMatTest {
+		b.Run(key, benchAdditionOfMatrixFunc(value[0], value[1]))
+	}
+}
+
+func benchAdditionOfMatrixFunc(N, M int) func(b *testing.B) {
+	return func(b *testing.B) {
+		A := createRandomMatrix(N, M)
+		B := createRandomMatrix(N, M)
+		b.ReportAllocs()
+		b.N = 10
+		b.ResetTimer()
+		for i := 0; i < b.N; i++ {
+			b.StartTimer()
+			C := additionOfMatrices(A, B)
+			b.StopTimer()
+			_ = C
+		}
+	}
+}
+
+// BenchmarkSubtractOfMatrix testing speed and memory use of
+// subtractOfMatrices function
+func BenchmarkSubtractOfMatrix(b *testing.B) {
+	for key, value := range mapMatTest {
+		b.Run(key, benchSubtractOfMatrixFunc(value[0], value[1]))
+	}
+}
+
+func benchSubtractOfMatrixFunc(N, M int) func(b *testing.B) {
+	return func(b *testing.B) {
+		A := createRandomMatrix(N, M)
+		B := createRandomMatrix(N, M)
+		b.ReportAllocs()
+		b.N = 
