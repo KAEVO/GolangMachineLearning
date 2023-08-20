@@ -121,4 +121,64 @@ func TestSVDOfMatrix(t *testing.T) {
 }
 
 // TestCholeskyOfMatrix testing speed and result of work
-// choleskyOfMatrix (gonum: cholesky.Factori
+// choleskyOfMatrix (gonum: cholesky.Factorize) function
+func TestCholeskyOfMatrix(t *testing.T) {
+	A := createRandomMatrix(16, 16)
+	var AS mat.SymDense
+	AS.SymOuterK(1, A)
+	L := choleskyOfMatrix(&AS)
+	var T mat.Dense
+	T.Mul(L, L.T())
+	if !mat.EqualApprox(&T, &AS, 1e-8) {
+		t.Errorf("Разложение Холецкого реализованно неправильно.")
+	}
+}
+
+// BenchmarkCreateRandomMatrix testing speed and memory use of
+// createRandomMatrix function
+func BenchmarkCreateRandomMatrix(b *testing.B) {
+	for key, value := range mapMatTest {
+		b.Run(key, benchCreateRandomMatrixFunc(value[0], value[1]))
+	}
+}
+
+func benchCreateRandomMatrixFunc(N, M int) func(b *testing.B) {
+	return func(b *testing.B) {
+		b.ReportAllocs()
+		b.N = 10
+		b.ResetTimer()
+		for i := 0; i < b.N; i++ {
+			b.StartTimer()
+			A := createRandomMatrix(N, M)
+			b.StopTimer()
+			A.IsZero()
+		}
+	}
+}
+
+// BenchmarkScaleMatrix testing speed and memory use of
+// scaleMatrix function
+func BenchmarkScaleMatrix(b *testing.B) {
+	for key, value := range mapMatTest {
+		b.Run(key, benchScaleMatrixFunc(value[0], value[1], 5.25))
+	}
+}
+
+func benchScaleMatrixFunc(N, M int, alpha float64) func(b *testing.B) {
+	return func(b *testing.B) {
+		A := createRandomMatrix(N, M)
+		b.ReportAllocs()
+		b.N = 10
+		b.ResetTimer()
+		for i := 0; i < b.N; i++ {
+			b.StartTimer()
+			scaleMatrix(alpha, A)
+			b.StopTimer()
+			scaleMatrix(1 / alpha, A)
+		}
+	}
+}
+
+// BenchmarkTransposeMatrix testing speed and memory use of
+// transposeMatrix function
+func BenchmarkTran
