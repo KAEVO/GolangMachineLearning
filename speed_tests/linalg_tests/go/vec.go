@@ -42,3 +42,23 @@ func additionOfVectors(v, u *mat.VecDense, alpha float64) (w *mat.VecDense) {
 		w.AddScaledVec(v, alpha, u)
 	}
 	return
+}
+
+// subtractOfVectors return subtract of vectors v, u
+func subtractOfVectors(v, u *mat.VecDense) (w *mat.VecDense) {
+	w = mat.NewVecDense(v.Len(), nil)
+	w.SubVec(v, u)
+	return
+}
+
+// dotOfVectors return result of multiplication of two vectors
+func dotOfVectors(v, u mat.Vector) (w float64) {
+	w = mat.Dot(v, u)
+	return
+}
+
+// vecPrint print vector in stdout
+func vecPrint(v *mat.VecDense) {
+	fmt.Printf("%v\n",
+		mat.Formatted(v, mat.Prefix(" "), mat.Excerpt(3)))
+}
