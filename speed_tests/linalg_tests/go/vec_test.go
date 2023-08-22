@@ -48,4 +48,45 @@ func TestFrobeniusNormOfVector(t *testing.T) {
 }
 
 // TestAdditionOfVectors testing correctness of
-// add
+// additionOfVectors (gonum: AddVec) function
+func TestAdditionOfVectors(t *testing.T) {
+	data := []float64{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
+	dataTest := []float64{2, 4, 6, 8, 10, 12, 14, 16, 18, 20}
+	v := mat.NewVecDense(len(data), data)
+	u := mat.NewVecDense(len(data), data)
+	resultTest := mat.NewVecDense(len(dataTest), dataTest)
+	w := additionOfVectors(u, v, 0.0)
+	if froTest := frobeniusNormOfVector(w); froTest != frobeniusNormOfVector(resultTest) {
+		t.Fatal("Векторы сложились неправильно.")
+	}
+}
+
+// TestSubtractOfVectors testing correctness of
+// subtractOfVectors (gonum: SubVec) function
+func TestSubtractOfVectors(t *testing.T) {
+	data := []float64{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
+	dataTest := []float64{0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
+	v := mat.NewVecDense(len(data), data)
+	u := mat.NewVecDense(len(data), data)
+	resultTest := mat.NewVecDense(len(dataTest), dataTest)
+	w := subtractOfVectors(u, v)
+	if froTest := frobeniusNormOfVector(w); froTest != frobeniusNormOfVector(resultTest) {
+		t.Fatal("Вычитание выполнено с ошибкой.")
+	}
+}
+
+// TestDotOfVectors testing correctness of
+// dotOfVectors (gonum: Dot) function
+func TestDotOfVectors(t *testing.T) {
+	data := []float64{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
+	testResult := 385.0
+	v := mat.NewVecDense(len(data), data)
+	u := mat.NewVecDense(len(data), data)
+	resultTest := dotOfVectors(v, u)
+	if resultTest != testResult {
+		t.Fatal("Умножение выполнено с ошибкой.")
+	}
+}
+
+// BenchmarkCreateRandomVector testing speed and memory use of
+// cre
