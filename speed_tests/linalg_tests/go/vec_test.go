@@ -89,4 +89,62 @@ func TestDotOfVectors(t *testing.T) {
 }
 
 // BenchmarkCreateRandomVector testing speed and memory use of
-// cre
+// createRandomVector function
+func BenchmarkCreateRandomVector(b *testing.B) {
+	for key, value := range mapVecTest {
+		b.Run(key, benchCreateRandomVectorFunc(value))
+	}
+}
+
+func benchCreateRandomVectorFunc(N int) func(b *testing.B) {
+	return func(b *testing.B) {
+		b.ReportAllocs()
+		b.N = 10
+		b.ResetTimer()
+		for i := 0; i < b.N; i++ {
+			b.StartTimer()
+			v := createRandomVector(N)
+			b.StopTimer()
+			v.IsZero()
+		}
+	}
+}
+
+// BenchmarkScaleVector testing speed and memory use vector scaling
+func BenchmarkScaleVector(b *testing.B) {
+	for key, value := range mapVecTest {
+		b.Run(key, benchScaleVectorFunc(value, 5.25))
+	}
+}
+
+func benchScaleVectorFunc(N int, alpha float64) func(b *testing.B) {
+	return func(b *testing.B) {
+		v := createRandomVector(N)
+		b.ReportAllocs()
+		b.N = 10
+		b.ResetTimer()
+		for i := 0; i < b.N; i++ {
+			b.StartTimer()
+			scaleVector(v, alpha)
+			b.StopTimer()
+			scaleVector(v, 1 / alpha)
+		}
+	}
+}
+
+// BenchmarkScaleVector testing speed and memory use vector scaling
+func BenchmarkFrobeniusNormOfVector(b *testing.B) {
+	for key, value := range mapVecTest {
+		b.Run(key, benchFrobeniusNormOfVectorFunc(value))
+	}
+}
+
+func benchFrobeniusNormOfVectorFunc(N int) func(b *testing.B) {
+	return func(b *testing.B) {
+		v := createRandomVector(N)
+		b.ReportAllocs()
+		b.N = 10
+		b.ResetTimer()
+		for i := 0; i < b.N; i++ {
+			b.StartTimer()
+			f := frobenius
