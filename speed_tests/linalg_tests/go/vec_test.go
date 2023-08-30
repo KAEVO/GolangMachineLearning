@@ -147,4 +147,70 @@ func benchFrobeniusNormOfVectorFunc(N int) func(b *testing.B) {
 		b.ResetTimer()
 		for i := 0; i < b.N; i++ {
 			b.StartTimer()
-			f := frobenius
+			f := frobeniusNormOfVector(v)
+			b.StopTimer()
+			_ = f
+		}
+	}
+}
+
+// BenchmarkAdditionOfVectors testing speed and memory use vector scaling
+func BenchmarkAdditionOfVectors(b *testing.B) {
+	for key, value := range mapVecTest {
+		b.Run(key, benchAdditionOfVectorsFunc(value))
+	}
+}
+
+func benchAdditionOfVectorsFunc(N int) func(b *testing.B) {
+	return func(b *testing.B) {
+		v := createRandomVector(N)
+		u := createRandomVector(N)
+		b.ReportAllocs()
+		b.N = 10
+		b.ResetTimer()
+		for i := 0; i < b.N; i++ {
+			b.StartTimer()
+			w := additionOfVectors(v, u, 0.0)
+			b.StopTimer()
+			_ = w
+		}
+	}
+}
+
+// BenchmarkAdditionOfVectors testing speed and memory use of vector scaling
+func BenchmarkSubtractOfVectors(b *testing.B) {
+	for key, value := range mapVecTest {
+		b.Run(key, benchSubtractOfVectorsFunc(value))
+	}
+}
+
+func benchSubtractOfVectorsFunc(N int) func(b *testing.B) {
+	return func(b *testing.B) {
+		v := createRandomVector(N)
+		u := createRandomVector(N)
+		b.ReportAllocs()
+		b.N = 10
+		b.ResetTimer()
+		for i := 0; i < b.N; i++ {
+			b.StartTimer()
+			w := subtractOfVectors(v, u)
+			b.StopTimer()
+			_ = w
+		}
+	}
+}
+
+// BenchmarkDotOfVectors testing speed and memory use of vectors dot
+func BenchmarkDotOfVectors(b *testing.B) {
+	for key, value := range mapVecTest {
+		b.Run(key, benchDotOfVectorsFunc(value))
+	}
+}
+
+func benchDotOfVectorsFunc(N int) func(b *testing.B) {
+	return func(b *testing.B) {
+		v := createRandomVector(N)
+		u := createRandomVector(N)
+		b.ReportAllocs()
+		b.N = 10
+		b.Res
