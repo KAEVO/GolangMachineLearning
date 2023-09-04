@@ -24,3 +24,55 @@ def scale_vector(vec: np.ndarray, alpha: float) -> np.ndarray:
     :param alpha: float - параметр масштабирования.
     """
 
+    return vec * alpha
+
+
+@timer(cnt=count)
+def frobenius_norm_of_vector(vec: np.ndarray) -> float:
+    """
+    Считает норму Фробениуса для переданного вектора.
+    :param vec: np.ndarray - вектор для поиска нормы;
+    :return:
+    - float - норма Фробениуса переданного вектора.
+    """
+
+    return LA.norm(vec)
+
+
+@timer(cnt=count)
+def addition_of_vectors(vec: np.ndarray, vec_2: np.ndarray) -> np.ndarray:
+    """
+    Считает сумму двух векторов.
+    :param vec: np.ndarray - слагаемое;
+    :param vec_2: np.ndarray - слагаемое.
+    :return:
+    - np.ndarray - сумма.
+    """
+
+    return np.add(vec, vec_2)
+
+
+@timer(cnt=count)
+def subtract_of_vectors(vec: np.ndarray, vec_2: np.ndarray) -> np.ndarray:
+    """
+    Считает разницу двух векторов.
+    :param vec: np.ndarray - уменьшаемое;
+    :param vec_2: np.ndarray - вычитаемое.
+    :return:
+    - np.ndarray - разность.
+    """
+
+    return np.subtract(vec, vec_2)
+
+
+@timer(cnt=count)
+def dot_of_vectors(vec: np.ndarray, vec_2: np.ndarray) -> np.ndarray:
+    """
+    Считает произведение двух векторов.
+    :param vec: np.ndarray - множитель;
+    :param vec_2: np.ndarray - множитель.
+    :return:
+    - np.ndarray - произведение.
+    """
+
+    return np.dot(vec, vec_2)
