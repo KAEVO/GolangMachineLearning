@@ -213,4 +213,12 @@ func benchDotOfVectorsFunc(N int) func(b *testing.B) {
 		u := createRandomVector(N)
 		b.ReportAllocs()
 		b.N = 10
-		b.Res
+		b.ResetTimer()
+		for i := 0; i < b.N; i++ {
+			b.StartTimer()
+			w := dotOfVectors(v, u)
+			b.StopTimer()
+			_ = w
+		}
+	}
+}
