@@ -106,3 +106,12 @@ class Plotter:
         self.prepare_data()
         for key, value in self.cases.items():
             fig = plt.figure(FigureClass=TFig, fig_title=key)
+            ax = fig.subplots()
+            ax.set_xlabel("Size (for vectors: N, for matrices: N*M)")
+            ax.set_ylabel('Memory usage') if "mem" in key else ax.set_ylabel('Time')
+            for k, v in value.items():
+                color = TFig.cs.get(k)
+
+                ax.plot([int(x) for x in v[0]], [int(x) for x in v[1]], f"{color}o-", label=f"{k}")
+            fig.legend(bbox_to_anchor=(0.3, 0.85), borderaxespad=0.)
+            plt.savefig(f"{self.source}/{key}.png")
