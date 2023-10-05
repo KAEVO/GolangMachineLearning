@@ -124,4 +124,8 @@ int main(int argc, char* argv[]){
                 break;
             default:
                 cout << "Wrong input!" << endl;
-                
+                return -1;
+
+        }
+    return 0;
+}
