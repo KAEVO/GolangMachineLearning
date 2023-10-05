@@ -35,4 +35,46 @@ void logit_fit(int rep){
     }
 
     LogisticRegression<> logit(x_train.n_rows);
-    doub
+    double diff = 0.0;
+    for (int i = 0; i < rep; i++){
+        auto start = chrono::steady_clock::now();
+        logit.Train(x_train, responses);
+        auto end = chrono::steady_clock::now();
+        diff += chrono::duration <double, nano> (end - start).count();
+    }
+    cout << fixed << "Test duration : " << diff/(float)rep << " ns" << endl;
+}
+
+void kmeans_fit(int rep){
+    arma::mat x_train;
+    data::Load("../../../datasets/the_xclara_cluster_train.csv", x_train, true);
+
+    arma::Row<size_t> assignments;
+    arma::size_t clusters = 3;
+
+    KMeans<> k;
+    double diff = 0.0;
+    for (int i = 0; i < rep; i++){
+        auto start = chrono::steady_clock::now();
+        k.Cluster(x_train, clusters, assignments);
+        auto end = chrono::steady_clock::now();
+        diff += chrono::duration <double, nano> (end - start).count();
+    }
+    cout << fixed << "Test duration : " << diff/(float)rep << " ns" << endl;
+}
+
+void dbscan_fit(int rep){
+    arma::mat x_train;
+    data::Load("../../../datasets/the_dbscan_handmade_dataset.csv", x_train, true);
+
+    arma::Row<size_t> assignments;
+
+    DBSCAN<> db(0.3, 7);
+    double diff = 0.0;
+    for (int i = 0; i < rep; i++){
+        auto start = chrono::steady_clock::now();
+        db.Cluster(x_train, assignments);
+        auto end = chrono::steady_clock::now();
+        diff += chrono::duration <double, nano> (end - start).count();
+    }
+    cout << fixed << "Test duration : " << diff/(float)rep 
