@@ -77,4 +77,51 @@ void dbscan_fit(int rep){
         auto end = chrono::steady_clock::now();
         diff += chrono::duration <double, nano> (end - start).count();
     }
-    cout << fixed << "Test duration : " << diff/(float)rep 
+    cout << fixed << "Test duration : " << diff/(float)rep << " ns" << endl;
+}
+
+void pca_fit(int rep){
+    arma::mat x_train;
+    data::Load("../../../datasets/the_boston_housing_dataset_train.csv", x_train, true);
+
+    PCAType<> pca;
+    double diff = 0.0;
+    for (int i = 0; i < rep; i++){
+        auto start = chrono::steady_clock::now();
+        pca.Apply(x_train, 2);
+        auto end = chrono::steady_clock::now();
+        diff += chrono::duration <double, nano> (end - start).count();
+    }
+    cout << fixed << "Test duration : " << diff/(float)rep << " ns" << endl;
+}
+
+
+int main(int argc, char* argv[]){
+    int test_case = strtol(argv[1], nullptr, 0);
+    int repeats = strtol(argv[2], nullptr, 0);
+
+    switch (test_case)
+        {
+            case TEST_LINEAR:
+                cout << "Test#1 Linear Regression" << endl;
+                linear_fit(repeats);
+                break;
+            case TEST_LOGISTIC:
+                cout << "Test#2 Logistic Regression" << endl;
+                logit_fit(repeats);
+                break;
+            case TEST_KMEANS:
+                cout << "Test#3 KMeans" << endl;
+                kmeans_fit(repeats);
+                break;
+            case TEST_DBSCAN:
+                cout << "Test#4 DBSCAN" << endl;
+                dbscan_fit(repeats);
+                break;
+            case TEST_PCA:
+                cout << "Test#5 PCA" << endl;
+                pca_fit(repeats);
+                break;
+            default:
+                cout << "Wrong input!" << endl;
+                
