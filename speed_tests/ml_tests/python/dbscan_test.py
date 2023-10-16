@@ -89,4 +89,20 @@ class DBSCANTester(DataGaner):
 
 def dbscan_test():
     """
-    Принтует в stdout результа
+    Принтует в stdout результаты теста кластеризации
+    алгоритмом DBSCAN.
+    """
+
+    @out
+    def test(DBSCAN):
+        DBSCAN.create_clusters()
+        print("Кластеризация выполнена.")
+
+    DBSCAN = DBSCANTester(size=500, type="simple")
+    print(f"Размер обучающей выборки: {DBSCAN.data.shape}")
+    test(DBSCAN)
+    DBSCAN.save_data_to_csv()
+
+
+if __name__ == "__main__":
+    dbscan_test()
