@@ -42,4 +42,23 @@ class LinearRegressionTester:
         return self.lr.score(self.X_test, self.y_test)
 
 
-def linear_regre
+def linear_regression_test():
+    """
+    Принтует в stdout результаты теста восстановления регрессии.
+    """
+
+    @out
+    def test(LR):
+        LR.create_linear_regression()
+        print("Регрессия восстановлена.")
+        print(f"R^squared: {LR.get_r_squared()}.\n")
+
+    LR = LinearRegressionTester()
+    LR.set_data("../../../datasets/the_WWT_weather_10k_dataset.csv",
+                "../../../datasets/the_WWT_weather_test_train.csv")
+    test(LR)
+
+
+if __name__ == "__main__":
+    linear_regression_test()
+
