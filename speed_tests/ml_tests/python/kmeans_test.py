@@ -61,4 +61,11 @@ def kmeans_test():
         print(f"Score: {KMEANS.get_score()}.\n")
 
     KMEANS = KMeansTester()
-    KMEANS.set_data("..
+    KMEANS.set_data("../../../datasets/the_xclara_cluster_2.5k_dataset.csv",
+                    "../../../datasets/the_xclara_cluster_test_train.csv")
+    test(KMEANS)
+    KMEANS.get_pictures()
+
+
+if __name__ == "__main__":
+    kmeans_test()
