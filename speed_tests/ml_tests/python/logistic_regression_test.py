@@ -25,4 +25,39 @@ class LogisticRegressionTester:
 
     def create_linear_regression(self):
         self.logr = LogisticRegression(random_state=0, solver='lbfgs')
-        self.do_logistic_
+        self.do_logistic_regression()
+
+    @timer(cnt=count)
+    def do_logistic_regression(self):
+        """
+        Обучает логистический классификатор.
+        """
+
+        assert (self.X is not None and self.y is not None), "данные не найдены"
+        self.logr.fit(self.X, self.y)
+
+    def get_score(self):
+        assert self.logr, "модель не обучена"
+        assert (self.X_test is not None and self.y_test is not None), "тестовые данные не переданы"
+        return self.logr.score(self.X_test, self.y_test)
+
+
+def logistic_regression_test():
+    """
+    Принтует в stdout результаты теста обучения логистического классификатора.
+    """
+
+    @out
+    def test(LOGR):
+        LOGR.create_linear_regression()
+        print("Регрессия восстановлена.")
+        print(f"R^squared: {LOGR.get_score()}.\n")
+
+    LOGR = LogisticRegressionTester()
+    LOGR.set_data("../../../datasets/the_breast_canser_500rows_dataset.csv",
+                "../../../datasets/the_breast_canser_test_train.csv")
+    test(LOGR)
+
+
+if __name__ == "__main__":
+    logistic_regression_test()
