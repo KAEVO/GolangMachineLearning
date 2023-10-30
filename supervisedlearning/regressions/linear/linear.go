@@ -205,3 +205,24 @@ func svdRegressionSolver(A *mat.Dense, y *mat.VecDense) (b *mat.VecDense, err er
 	SVD.Factorize(A, mat.SVDFull)
 	SVD.VTo(&V)
 	SVD.UTo(&U)
+	container := SVD.Values(nil)
+	if vr, vc := V.Dims(); vr != c && vc != c { return nil, SVDDecompositionError }
+	if ur, uc := U.Dims(); ur != r && uc != r { return nil, SVDDecompositionError }
+	D := mat.NewDense(r, c, nil)
+	for idx, element := range container {
+		D.Set(idx, idx, 1 / element)
+	}
+	// Now find b:
+	var Vt, DVt, UDVt mat.Dense
+	Vt.Clone(V.T())
+	DVt.Mul(D, &Vt)
+	UDVt.Mul(&U, &DVt)
+	var temp mat.Dense
+	temp.Mul(UDVt.T(), y)
+	if _, c := temp.Dims(); c != 1 { return nil, SVDResultComputeError }
+	view := temp.ColView(0)
+	for i := 0; i < view.Len(); i++ {
+		b.SetVec(i, view.AtVec(i))
+	}
+	return
+}
