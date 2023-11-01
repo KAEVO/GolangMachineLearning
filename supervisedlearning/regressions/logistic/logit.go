@@ -115,4 +115,43 @@ func gdSolver(X *mat.Dense, y *mat.VecDense, w *mat.VecDense, b *mat.VecDense, l
 	for i := 0; i < iter; i++ {
 		sigmoid(X, w, b, h)
 		subg := mat.NewVecDense(y.Len(), nil)
-		subg.SubVec(y, h.ColV
+		subg.SubVec(y, h.ColView(0))
+		grad.MulVec(X.T(), subg)
+		grad.ScaleVec(1/(float64)(y.Len()), grad)
+		grad.ScaleVec(-lr, grad)
+		w.SubVec(grad, w)
+	}
+}
+
+func sgdSolver(X *mat.Dense, y *mat.VecDense, w *mat.VecDense, b *mat.VecDense, lr float64, iter int, batch int) {
+	h := mat.NewDense(batch, 1, nil)
+	grad := mat.NewVecDense(w.Len(), nil)
+	epoch := int(math.Round(float64(y.Len()) / float64(batch)))
+	for i := 0; i < iter; i++ {
+		for j := 0; j < epoch; j++ {
+			rnd_idx := rand.Intn(y.Len() - batch)
+			xb := X.Slice(rnd_idx, rnd_idx+batch, 0, w.Len())
+			Xb := mat.DenseCopyOf(xb)
+			y_b := y.SliceVec(rnd_idx, rnd_idx+batch)
+			yb := mat.VecDenseCopyOf(y_b)
+			bias_b := y.SliceVec(rnd_idx, rnd_idx+batch)
+			bias := mat.VecDenseCopyOf(bias_b)
+			sigmoid(Xb, w, bias, h)
+			subg := mat.NewVecDense(yb.Len(), nil)
+			subg.SubVec(yb, h.ColView(0))
+			grad.MulVec(Xb.T(), subg)
+			grad.ScaleVec(1/(float64)(yb.Len()), grad)
+			grad.ScaleVec(-lr, grad)
+			w.SubVec(grad, w)
+		}
+	}
+}
+
+func sigmoid(X *mat.Dense, w *mat.VecDense, b *mat.VecDense, h *mat.Dense) {
+	sigm := func(_, _ int, v float64) float64 { return math.Exp(v) / (1 + math.Exp(v)) }
+	xrn, _ := X.Dims()
+	prod := mat.NewVecDense(xrn, nil)
+	prod.MulVec(X, w)
+	prod.AddVec(prod, b)
+	h.Apply(sigm, prod)
+}
