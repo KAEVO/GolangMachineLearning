@@ -65,4 +65,6 @@ func TestRandBlobsFitPredictKmeans(t *testing.T) {
 	err := kmns.Fit(train, k)
 	if err != nil { log.Fatal(errors.New("ошибка фита")) }
 	fmt.Println(kmns.labels)
-	
+	lbs := kmns.Predict(test)
+	fmt.Println(lbs)
+}
